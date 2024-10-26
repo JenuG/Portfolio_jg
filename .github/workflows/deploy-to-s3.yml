@@ -1,4 +1,4 @@
-name: Deploy to S3
+name: Sync with S3
 
 on:
   push:
@@ -6,20 +6,21 @@ on:
       - main
 
 jobs:
-  deploy:
+  sync:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AKIATTSKFWFRXBKD2O7K }}
-          aws-secret-access-key: ${{ secrets.kEOyNyxoLyJwuRmk/nGXEzKx/mb61eFUY/ACQZEs }}
-          aws-region: ${{ secrets.us-east-1 }}
+      - name: Install AWS CLI
+        run: |
+          choco install awscli
 
-      - name: Sync files to S3
-        run: aws s3 sync . s3://${{ secrets.jgfinalprojectbucket }}/ --delete
-
+      - name: Sync with S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AKIATTSKFWFRYMGWRYVT }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.acVHEJwgFAeacEfGGklSlcIXUgIcH7/4ClE29La4 }}
+          AWS_DEFAULT_REGION: ${{ secrets.us-east-1 }}  # Use the secret for the region
+        run: |
+          aws s3 sync . s3://${{ secrets.jgfinalprojectbucket }}/ --delete
